@@ -30,316 +30,490 @@
         />
     </head>
     <body data-bs-theme="dark">
-        <div class="row m-2">
-            <div class="container p-2 col-6 col-xxl-7 col-md-12 border rounded">
-                <div
-                    class="d-flex justify-content-between p-2 align-items-start"
-                >
-                    <h1>Incident Report System</h1>
-                    <button
-                        id="theme-picker"
-                        class="btn btn-outline-secondary"
-                        aria-label="Toggle theme"
+        <div class="row g-2 m-2">
+            <div id="table-column" class="col-12 col-sm-6 col-xxl-7">
+                <div class="border rounded p-2 h-100">
+                    <div
+                        class="d-flex justify-content-between p-2 align-items-start"
                     >
-                        <i id="theme-picker-icon" class="bi"></i>
-                    </button>
-                </div>
-                <div id="table-space">
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary m-2">
-                            Add incident
+                        <h1>Incident Report System</h1>
+                        <button
+                            id="theme-picker"
+                            class="btn btn-outline-secondary"
+                            aria-label="Toggle theme"
+                        >
+                            <i id="theme-picker-icon" class="bi"></i>
                         </button>
-                        <div class="dropdown m-2">
-                            <button
-                                class="btn btn-outline-secondary dropdown-toggle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                data-bs-auto-close="outside"
-                                aria-expanded="false"
-                            >
-                                Columns
-                            </button>
-                            <ul
-                                class="dropdown-menu p-2"
-                                style="min-width: 200px"
-                            >
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="0"
-                                        />Title</label
-                                    >
-                                </li>
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="1"
-                                        />Location</label
-                                    >
-                                </li>
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="2"
-                                            checked
-                                        />Type</label
-                                    >
-                                </li>
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="3"
-                                            checked
-                                        />Priority</label
-                                    >
-                                </li>
-
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="4"
-                                            checked
-                                        />Status</label
-                                    >
-                                </li>
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="5"
-                                        />Reporter</label
-                                    >
-                                </li>
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="6"
-                                        />Data/time</label
-                                    >
-                                </li>
-                                <li>
-                                    <label
-                                        class="dropdown-item d-flex align-items-center gap-2 mb-0"
-                                    >
-                                        <input
-                                            class="form-check-input col-toggle"
-                                            type="checkbox"
-                                            data-col="7"
-                                        />Description</label
-                                    >
-                                </li>
-                            </ul>
-                        </div>
                     </div>
-                    <div class="d-flex flex-column">
-                        <table id="preview-data">
-                            <thead>
-                                <th>Title</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>something</th>
-                            </thead>
-                            <tbody>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                            </tbody>
-                        </table>
-                        <button class="btn btn-outline-primary m-2">
-                            Extended View
-                        </button>
+                    <div id="table-space">
+                        <div
+                            id="table-toolbar"
+                            class="d-flex justify-content-between"
+                        >
+                            <button
+                                id="add-incident-btn"
+                                class="btn btn-primary m-2"
+                            >
+                                Add incident
+                            </button>
+                            <div class="dropdown m-2">
+                                <button
+                                    class="btn btn-outline-secondary dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-auto-close="outside"
+                                    aria-expanded="false"
+                                >
+                                    Columns
+                                </button>
+                                <ul
+                                    class="dropdown-menu p-2"
+                                    style="min-width: 200px"
+                                >
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="0"
+                                            />Title</label
+                                        >
+                                    </li>
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="1"
+                                            />Location</label
+                                        >
+                                    </li>
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="2"
+                                                checked
+                                            />Type</label
+                                        >
+                                    </li>
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="3"
+                                                checked
+                                            />Priority</label
+                                        >
+                                    </li>
+
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="4"
+                                                checked
+                                            />Status</label
+                                        >
+                                    </li>
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="5"
+                                            />Reporter</label
+                                        >
+                                    </li>
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="6"
+                                            />Data/time</label
+                                        >
+                                    </li>
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-2 mb-0"
+                                        >
+                                            <input
+                                                class="form-check-input col-toggle"
+                                                type="checkbox"
+                                                data-col="7"
+                                            />Description</label
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="table-view" class="d-flex flex-column">
+                            <div class="table-responsive">
+                                <table id="preview-data" class="table">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <button
+                                id="extended-view-btn"
+                                class="btn btn-outline-primary m-2"
+                            >
+                                Extended View
+                            </button>
+                        </div>
+                        <form
+                            id="incident-form"
+                            class="needs-validation d-none d-flex flex-column gap-2 p-2"
+                            novalidate
+                        >
+                            <div>
+                                <label for="incident-title" class="form-label"
+                                    >Title</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="incident-title"
+                                    required
+                                />
+                                <div class="invalid-feedback">
+                                    Please enter a title.
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    for="incident-location"
+                                    class="form-label"
+                                    >Location</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="incident-location"
+                                    required
+                                />
+                                <div class="invalid-feedback">
+                                    Please enter a location.
+                                </div>
+                            </div>
+                            <div>
+                                <label for="incident-type" class="form-label"
+                                    >Type</label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="incident-type"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Choose…
+                                    </option>
+                                    <option value="Fire">Fire</option>
+                                    <option value="Medical">Medical</option>
+                                    <option value="Security">Security</option>
+                                    <option value="Infrastructure">
+                                        Infrastructure
+                                    </option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose a type.
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    for="incident-priority"
+                                    class="form-label"
+                                    >Priority</label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="incident-priority"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Choose…
+                                    </option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Critical">Critical</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose a priority.
+                                </div>
+                            </div>
+                            <div>
+                                <label for="incident-status" class="form-label"
+                                    >Status</label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="incident-status"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Choose…
+                                    </option>
+                                    <option value="Open">Open</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Resolved">Resolved</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose a status.
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    for="incident-reporter"
+                                    class="form-label"
+                                    >Reporter</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="incident-reporter"
+                                    required
+                                />
+                                <div class="invalid-feedback">
+                                    Please enter a reporter.
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    for="incident-datetime"
+                                    class="form-label"
+                                    >Date/time</label
+                                >
+                                <input
+                                    type="datetime-local"
+                                    class="form-control"
+                                    id="incident-datetime"
+                                    required
+                                />
+                                <div class="invalid-feedback">
+                                    Please enter a date and time.
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    for="incident-description"
+                                    class="form-label"
+                                    >Description</label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    id="incident-description"
+                                    rows="3"
+                                ></textarea>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    Save incident
+                                </button>
+                                <button
+                                    type="button"
+                                    id="cancel-incident"
+                                    class="btn btn-outline-secondary"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div
-                class="container col-6 col-xxl-5 col-md-12 border rounded p-2"
-            >
-                <div class="p-2">
-                    <h1>Data Dashboard</h1>
-                </div>
+            <div id="dashboard-column" class="col-12 col-sm-6 col-xxl-5">
+                <div class="border rounded p-2 h-100">
+                    <div class="p-2">
+                        <h1>Data Dashboard</h1>
+                    </div>
 
-                <div class="p-2">
-                    <select class="form-select" aria-label="Time period filter">
-                        <option selected>Time period</option>
-                        <option value="1d">1 Day</option>
-                        <option value="7d">7 Days</option>
-                        <option value="1m">1 Month</option>
-                        <option value="6m">6 Months</option>
-                        <option value="1y">1 year</option>
-                        <option value="2y">2 year</option>
-                    </select>
-                </div>
+                    <div class="p-2">
+                        <select
+                            class="form-select"
+                            aria-label="Time period filter"
+                        >
+                            <option selected>Time period</option>
+                            <option value="1d">1 Day</option>
+                            <option value="7d">7 Days</option>
+                            <option value="1m">1 Month</option>
+                            <option value="6m">6 Months</option>
+                            <option value="1y">1 year</option>
+                            <option value="2y">2 year</option>
+                        </select>
+                    </div>
 
-                <div class="row g-2 p-2">
-                    <div class="col-6 col-lg-3">
-                        <div class="card text-center h-100">
-                            <div class="card-body py-3">
-                                <div class="text-secondary small">
-                                    Total Incidents
-                                </div>
-                                <div class="fs-2 fw-bold" id="kpi-total">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="card text-center h-100">
-                            <div class="card-body py-3">
-                                <div class="text-secondary small">
-                                    Critical Incidents
-                                </div>
-                                <div
-                                    class="fs-2 fw-bold text-danger"
-                                    id="kpi-critical"
-                                >
-                                    0
+                    <div class="row g-2 p-2">
+                        <div class="col-6 col-lg-3">
+                            <div class="card text-center h-100">
+                                <div class="card-body py-3">
+                                    <div class="text-secondary small">
+                                        Total
+                                    </div>
+                                    <div class="fs-2 fw-bold" id="kpi-total">
+                                        0
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="card text-center h-100">
-                            <div class="card-body py-3">
-                                <div class="text-secondary small">
-                                    Active Incidents
+                        <div class="col-6 col-lg-3">
+                            <div class="card text-center h-100">
+                                <div class="card-body py-3">
+                                    <div class="text-secondary small">
+                                        Critical
+                                    </div>
+                                    <div
+                                        class="fs-2 fw-bold text-danger"
+                                        id="kpi-critical"
+                                    >
+                                        0
+                                    </div>
                                 </div>
-                                <div
-                                    class="fs-2 fw-bold text-warning"
-                                    id="kpi-active"
-                                >
-                                    0
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="card text-center h-100">
+                                <div class="card-body py-3">
+                                    <div class="text-secondary small">
+                                        Active
+                                    </div>
+                                    <div
+                                        class="fs-2 fw-bold text-warning"
+                                        id="kpi-active"
+                                    >
+                                        0
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="card text-center h-100">
+                                <div class="card-body py-3">
+                                    <div class="text-secondary small">
+                                        Resolved
+                                    </div>
+                                    <div
+                                        class="fs-2 fw-bold text-success"
+                                        id="kpi-resolved"
+                                    >
+                                        0
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="card text-center h-100">
-                            <div class="card-body py-3">
-                                <div class="text-secondary small">Resolved</div>
-                                <div
-                                    class="fs-2 fw-bold text-success"
-                                    id="kpi-resolved"
-                                >
-                                    0
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="p-2">
-                    <ul class="nav nav-tabs" id="dashboard-tabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button
-                                class="nav-link active"
-                                id="map-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#map-pane"
-                                type="button"
-                                role="tab"
-                                aria-controls="map-pane"
-                                aria-selected="true"
-                            >
-                                Map
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button
-                                class="nav-link"
-                                id="pie-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#pie-pane"
-                                type="button"
-                                role="tab"
-                                aria-controls="pie-pane"
-                                aria-selected="false"
-                            >
-                                Pie
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button
-                                class="nav-link"
-                                id="timeline-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#timeline-pane"
-                                type="button"
-                                role="tab"
-                                aria-controls="timeline-pane"
-                                aria-selected="false"
-                            >
-                                Timeline
-                            </button>
-                        </li>
-                    </ul>
-                    <div
-                        class="tab-content border border-top-0 rounded-bottom p-3"
-                        id="dashboard-tab-content"
-                    >
+                    <div class="p-2">
+                        <ul
+                            class="nav nav-tabs"
+                            id="dashboard-tabs"
+                            role="tablist"
+                        >
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link active"
+                                    id="map-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#map-pane"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="map-pane"
+                                    aria-selected="true"
+                                >
+                                    Map
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link"
+                                    id="pie-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#pie-pane"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="pie-pane"
+                                    aria-selected="false"
+                                >
+                                    Pie
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link"
+                                    id="timeline-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#timeline-pane"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="timeline-pane"
+                                    aria-selected="false"
+                                >
+                                    Timeline
+                                </button>
+                            </li>
+                        </ul>
                         <div
-                            class="tab-pane show active"
-                            id="map-pane"
-                            role="tabpanel"
-                            aria-labelledby="map-tab"
+                            class="tab-content border border-top-0 rounded-bottom p-3"
+                            id="dashboard-tab-content"
                         >
                             <div
-                                id="map"
-                                class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
+                                class="tab-pane show active"
+                                id="map-pane"
+                                role="tabpanel"
+                                aria-labelledby="map-tab"
                             >
-                                Map
+                                <div
+                                    id="map"
+                                    class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
+                                >
+                                    Map
+                                </div>
                             </div>
-                        </div>
-                        <div
-                            class="tab-pane"
-                            id="pie-pane"
-                            role="tabpanel"
-                            aria-labelledby="pie-tab"
-                        >
                             <div
-                                id="pie-chart"
-                                class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
+                                class="tab-pane"
+                                id="pie-pane"
+                                role="tabpanel"
+                                aria-labelledby="pie-tab"
                             >
-                                Pie
+                                <div
+                                    id="pie-chart"
+                                    class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
+                                >
+                                    Pie
+                                </div>
                             </div>
-                        </div>
-                        <div
-                            class="tab-pane"
-                            id="timeline-pane"
-                            role="tabpanel"
-                            aria-labelledby="timeline-tab"
-                        >
                             <div
-                                id="timeline-chart"
-                                class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
+                                class="tab-pane"
+                                id="timeline-pane"
+                                role="tabpanel"
+                                aria-labelledby="timeline-tab"
                             >
-                                Timeline
+                                <div
+                                    id="timeline-chart"
+                                    class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
+                                >
+                                    Timeline
+                                </div>
                             </div>
                         </div>
                     </div>

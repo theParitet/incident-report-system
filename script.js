@@ -48,6 +48,8 @@ $(function () {
     const tableView = $("#table-view");
     const incidentForm = $("#incident-form");
 
+    let editingIndex = null;
+
     const showForm = () => {
         toolbar.addClass("d-none");
         tableView.addClass("d-none");
@@ -57,6 +59,7 @@ $(function () {
     const showTable = () => {
         incidentForm.addClass("d-none").removeClass("was-validated");
         incidentForm[0].reset();
+        editingIndex = null;
         toolbar.removeClass("d-none");
         tableView.removeClass("d-none");
     };
@@ -85,8 +88,38 @@ $(function () {
         };
 
         const incidents = JSON.parse(localStorage.getItem("incidents")) || [];
-        incidents.push(incident);
+        if (editingIndex === null) {
+            incidents.push(incident);
+        } else {
+            incidents[editingIndex] = incident;
+        }
         localStorage.setItem("incidents", JSON.stringify(incidents));
+    };
+
+    const startEdit = (index) => {
+        const incidents = JSON.parse(localStorage.getItem("incidents")) || [];
+        const incident = incidents[index];
+        if (!incident) return;
+
+        $("#incident-title").val(incident.title);
+        $("#incident-location").val(incident.location);
+        $("#incident-type").val(incident.type);
+        $("#incident-priority").val(incident.priority);
+        $("#incident-status").val(incident.status);
+        $("#incident-reporter").val(incident.reporter);
+        $("#incident-datetime").val(incident.datetime);
+        $("#incident-description").val(incident.description);
+
+        editingIndex = index;
+        showForm();
+    };
+
+    const deleteIncident = (index) => {
+        const incidents = JSON.parse(localStorage.getItem("incidents")) || [];
+        incidents.splice(index, 1);
+        localStorage.setItem("incidents", JSON.stringify(incidents));
+        renderTable();
+        renderKpis();
     };
 
     const renderTable = () => {
@@ -101,21 +134,27 @@ $(function () {
         const headerCells = visible
             .map((i) => `<th>${COLUMNS[i].label}</th>`)
             .join("");
-        $("#preview-data thead").html(`<tr>${headerCells}</tr>`);
+        $("#preview-data thead").html(
+            `<tr>${headerCells}<th>Actions</th></tr>`,
+        );
 
         if (incidents.length === 0) {
             $("#preview-data tbody").html(
-                `<tr><td colspan="${visible.length || 1}" class="text-secondary">No incidents yet.</td></tr>`,
+                `<tr><td colspan="${visible.length + 1}" class="text-secondary">No incidents yet.</td></tr>`,
             );
             return;
         }
 
         const rows = incidents
-            .map((incident) => {
+            .map((incident, index) => {
                 const cells = visible
                     .map((i) => `<td>${incident[COLUMNS[i].key]}</td>`)
                     .join("");
-                return `<tr>${cells}</tr>`;
+                const actions = `<td class="text-nowrap">
+                    <button type="button" class="btn btn-sm btn-outline-secondary edit-incident" data-index="${index}">Edit</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-incident" data-index="${index}">Delete</button>
+                </td>`;
+                return `<tr>${cells}${actions}</tr>`;
             })
             .join("");
         $("#preview-data tbody").html(rows);
@@ -135,9 +174,32 @@ $(function () {
         );
     };
 
-    $("#add-incident-btn").on("click", showForm);
+    $("#add-incident-btn").on("click", function () {
+        editingIndex = null;
+        showForm();
+    });
     $("#cancel-incident").on("click", showTable);
     $(".col-toggle").on("change", renderTable);
+
+    $("#preview-data tbody").on("click", ".edit-incident", function () {
+        startEdit(Number($(this).data("index")));
+    });
+
+    const deleteModal = new bootstrap.Modal("#delete-modal");
+    let pendingDeleteIndex = null;
+
+    $("#preview-data tbody").on("click", ".delete-incident", function () {
+        pendingDeleteIndex = Number($(this).data("index"));
+        deleteModal.show();
+    });
+
+    $("#confirm-delete").on("click", function () {
+        if (pendingDeleteIndex !== null) {
+            deleteIncident(pendingDeleteIndex);
+            pendingDeleteIndex = null;
+        }
+        deleteModal.hide();
+    });
 
     $("#extended-view-btn").on("click", function () {
         $("#dashboard-column").toggleClass("d-none");

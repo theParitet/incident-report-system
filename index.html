@@ -9,13 +9,44 @@
         <!-- jquery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-        <!-- boostrap -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-            crossorigin="anonymous"
-        />
+        <!-- bootstrap -->
+        <link id="bootstrap-link" rel="stylesheet" crossorigin="anonymous" />
+        <script>
+            // i18n.js
+            const SUPPORTED_LANGS = ["en", "ar", "ru"];
+
+            const SHA_BOOTSTRAP_INTEGRITY_RTL =
+                "sha384-CfCrinSRH2IR6a4e6fy2q6ioOX7O6Mtm1L9vRvFZ1trBncWmMePhzvafv7oIcWiW";
+            const SHA_BOOTSTRAP_INTEGRITY_LTR =
+                "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB";
+
+            const BOOTSTRAP_CDN_RTL =
+                "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.rtl.min.css";
+            const BOOTSTRAP_CDN_LTR =
+                "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css";
+
+            const lang = localStorage.getItem("lang") || "ar";
+
+            $(document).attr("dir", lang === "ar" ? "rtl" : "ltr");
+            $(document).attr("lang", lang);
+
+            // swap the stylesheets
+            $("#bootstrap-link").attr(
+                "integrity",
+                lang === "ar"
+                    ? SHA_BOOTSTRAP_INTEGRITY_RTL
+                    : SHA_BOOTSTRAP_INTEGRITY_LTR,
+            );
+            $("#bootstrap-link").attr(
+                "href",
+                lang === "ar" ? BOOTSTRAP_CDN_RTL : BOOTSTRAP_CDN_LTR,
+            );
+
+            // theme.js
+            let theme = localStorage.getItem("theme") || "dark";
+            $("html").attr("data-bs-theme", theme);
+        </script>
+        <!-- bootstrap icons -->
         <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
@@ -28,24 +59,77 @@
             href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
             rel="stylesheet"
         />
+
+        <!-- leaflet -->
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""
+        />
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""
+        ></script>
     </head>
-    <body data-bs-theme="dark">
-        <div class="row g-2 m-2">
-            <div id="table-column" class="col-12 col-sm-6 col-xxl-7">
-                <div class="border rounded p-2 h-100">
-                    <div
-                        class="d-flex justify-content-between p-2 align-items-start"
+    <body class="p-2">
+        <div class="row g-2 mx-auto">
+            <div
+                class="col-12 d-flex justify-content-between align-items-center"
+            >
+                <h1>Incident Report System</h1>
+                <div class="d-flex gap-2">
+                    <button
+                        id="theme-picker"
+                        class="btn btn-outline-secondary"
+                        aria-label="Toggle theme"
                     >
-                        <h1>Incident Report System</h1>
+                        <i id="theme-picker-icon" class="bi bi-sun-fill"></i>
+                    </button>
+
+                    <div class="dropdown">
                         <button
-                            id="theme-picker"
-                            class="btn btn-outline-secondary"
-                            aria-label="Toggle theme"
+                            class="btn btn-outline-secondary dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
                         >
-                            <i id="theme-picker-icon" class="bi"></i>
+                            <i class="bi bi-translate"></i>
                         </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button
+                                    id="lang-picker-en"
+                                    class="dropdown-item"
+                                >
+                                    English
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    id="lang-picker-ar"
+                                    class="dropdown-item"
+                                >
+                                    العربية
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    id="lang-picker-ru"
+                                    class="dropdown-item"
+                                >
+                                    Русский
+                                </button>
+                            </li>
+                        </ul>
                     </div>
+                </div>
+            </div>
+            <div id="table-column" class="col-12 col-lg-6 col-xxl-7">
+                <div class="border rounded p-2 h-100">
                     <div id="table-space">
+                        <h2 class="p-2">Data Preview</h2>
                         <div
                             id="table-toolbar"
                             class="d-flex justify-content-between"
@@ -179,188 +263,30 @@
                                 Extended View
                             </button>
                         </div>
-                        <form
-                            id="incident-form"
-                            class="needs-validation d-none d-flex flex-column gap-2 p-2"
-                            novalidate
-                        >
-                            <div>
-                                <label for="incident-title" class="form-label"
-                                    >Title</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="incident-title"
-                                    required
-                                />
-                                <div class="invalid-feedback">
-                                    Please enter a title.
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    for="incident-location"
-                                    class="form-label"
-                                    >Location</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="incident-location"
-                                    required
-                                />
-                                <div class="invalid-feedback">
-                                    Please enter a location.
-                                </div>
-                            </div>
-                            <div>
-                                <label for="incident-type" class="form-label"
-                                    >Type</label
-                                >
-                                <select
-                                    class="form-select"
-                                    id="incident-type"
-                                    required
-                                >
-                                    <option value="" selected disabled>
-                                        Choose…
-                                    </option>
-                                    <option value="Fire">Fire</option>
-                                    <option value="Medical">Medical</option>
-                                    <option value="Security">Security</option>
-                                    <option value="Infrastructure">
-                                        Infrastructure
-                                    </option>
-                                    <option value="Other">Other</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please choose a type.
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    for="incident-priority"
-                                    class="form-label"
-                                    >Priority</label
-                                >
-                                <select
-                                    class="form-select"
-                                    id="incident-priority"
-                                    required
-                                >
-                                    <option value="" selected disabled>
-                                        Choose…
-                                    </option>
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Critical">Critical</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please choose a priority.
-                                </div>
-                            </div>
-                            <div>
-                                <label for="incident-status" class="form-label"
-                                    >Status</label
-                                >
-                                <select
-                                    class="form-select"
-                                    id="incident-status"
-                                    required
-                                >
-                                    <option value="" selected disabled>
-                                        Choose…
-                                    </option>
-                                    <option value="Open">Open</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Resolved">Resolved</option>
-                                    <option value="Closed">Closed</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please choose a status.
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    for="incident-reporter"
-                                    class="form-label"
-                                    >Reporter</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="incident-reporter"
-                                    required
-                                />
-                                <div class="invalid-feedback">
-                                    Please enter a reporter.
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    for="incident-datetime"
-                                    class="form-label"
-                                    >Date/time</label
-                                >
-                                <input
-                                    type="datetime-local"
-                                    class="form-control"
-                                    id="incident-datetime"
-                                    required
-                                />
-                                <div class="invalid-feedback">
-                                    Please enter a date and time.
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    for="incident-description"
-                                    class="form-label"
-                                    >Description</label
-                                >
-                                <textarea
-                                    class="form-control"
-                                    id="incident-description"
-                                    rows="3"
-                                ></textarea>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">
-                                    Save incident
-                                </button>
-                                <button
-                                    type="button"
-                                    id="cancel-incident"
-                                    class="btn btn-outline-secondary"
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
-            <div id="dashboard-column" class="col-12 col-sm-6 col-xxl-5">
+            <div id="dashboard-column" class="col-12 col-lg-6 col-xxl-5">
                 <div class="border rounded p-2 h-100">
-                    <div class="p-2">
-                        <h1>Data Dashboard</h1>
-                    </div>
-
-                    <div class="p-2">
-                        <select
-                            class="form-select"
-                            aria-label="Time period filter"
-                        >
-                            <option selected>Time period</option>
-                            <option value="1d">1 Day</option>
-                            <option value="7d">7 Days</option>
-                            <option value="1m">1 Month</option>
-                            <option value="6m">6 Months</option>
-                            <option value="1y">1 year</option>
-                            <option value="2y">2 year</option>
+                    <h2 class="p-2">Data Dashboard</h2>
+                    <div class="input-group p-2">
+                        <input
+                            type="number"
+                            min="1"
+                            max="65535"
+                            class="form-control"
+                            placeholder="Enter time amount. E.g., 7"
+                            aria-label="Recipient's username with two button addons"
+                        />
+                        <select class="btn btn-outline-secondary" type="select">
+                            <option value="day">Day</option>
+                            <option value="week">Week</option>
+                            <option value="month">Month</option>
+                            <option value="year">Year</option>
                         </select>
+                        <button class="btn btn-secondary" type="button">
+                            Filter
+                        </button>
                     </div>
 
                     <div class="row g-2 p-2">
@@ -495,11 +421,8 @@
                                 role="tabpanel"
                                 aria-labelledby="pie-tab"
                             >
-                                <div
-                                    id="pie-chart"
-                                    class="d-flex align-items-center justify-content-center bg-light text-dark rounded"
-                                >
-                                    Pie
+                                <div style="height: 300px">
+                                    <canvas id="pie-chart"></canvas>
                                 </div>
                             </div>
                             <div
@@ -559,6 +482,185 @@
             </div>
         </div>
 
+        <div
+            class="modal fade"
+            id="incident-modal"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form
+                    id="incident-form"
+                    class="modal-content needs-validation"
+                    novalidate
+                >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="incident-modal-title">
+                            Add incident
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column gap-2">
+                        <div>
+                            <label for="incident-title" class="form-label"
+                                >Title</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="incident-title"
+                                required
+                            />
+                            <div class="invalid-feedback">
+                                Please enter a title.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-location" class="form-label"
+                                >Location</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="incident-location"
+                                required
+                            />
+                            <div class="invalid-feedback">
+                                Please enter a location.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-type" class="form-label"
+                                >Type</label
+                            >
+                            <select
+                                class="form-select"
+                                id="incident-type"
+                                required
+                            >
+                                <option value="" selected disabled>
+                                    Choose…
+                                </option>
+                                <option value="Fire">Fire</option>
+                                <option value="Medical">Medical</option>
+                                <option value="Security">Security</option>
+                                <option value="Infrastructure">
+                                    Infrastructure
+                                </option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please choose a type.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-priority" class="form-label"
+                                >Priority</label
+                            >
+                            <select
+                                class="form-select"
+                                id="incident-priority"
+                                required
+                            >
+                                <option value="" selected disabled>
+                                    Choose…
+                                </option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please choose a priority.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-status" class="form-label"
+                                >Status</label
+                            >
+                            <select
+                                class="form-select"
+                                id="incident-status"
+                                required
+                            >
+                                <option value="" selected disabled>
+                                    Choose…
+                                </option>
+                                <option value="Open">Open</option>
+                                <option value="Active">Active</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please choose a status.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-reporter" class="form-label"
+                                >Reporter</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="incident-reporter"
+                                required
+                            />
+                            <div class="invalid-feedback">
+                                Please enter a reporter.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-datetime" class="form-label"
+                                >Date/time</label
+                            >
+                            <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="incident-datetime"
+                                required
+                            />
+                            <div class="invalid-feedback">
+                                Please enter a date and time.
+                            </div>
+                        </div>
+                        <div>
+                            <label for="incident-description" class="form-label"
+                                >Description</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="incident-description"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            id="save-incident"
+                            class="btn btn-primary"
+                        >
+                            Add
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- chart js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- bootstrap -->
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -566,6 +668,9 @@
             crossorigin="anonymous"
         ></script>
         <!-- own -->
+        <script type="module" src="theme.js"></script>
+        <script type="module" src="columns.js"></script>
+        <script type="module" src="i18n.js"></script>
         <script type="module" src="script.js"></script>
     </body>
 </html>

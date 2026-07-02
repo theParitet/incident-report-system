@@ -1,68 +1,25 @@
-// theme
 $(function () {
-    let theme = localStorage.getItem("theme") || "dark";
-    const changeTheme = (theme) => {
-        if (theme === "dark") {
-            $("#theme-picker-icon").removeClass("bi-sun-fill");
-            $("#theme-picker-icon").addClass("bi-moon-stars-fill");
-        } else {
-            $("#theme-picker-icon").addClass("bi-sun-fill");
-            $("#theme-picker-icon").removeClass("bi-moon-stars-fill");
-        }
-        $(document.body).attr("data-bs-theme", theme);
-    };
-    changeTheme(theme);
-
-    $("#theme-picker").on("click", function () {
-        theme = theme === "dark" ? "light" : "dark";
-
-        changeTheme(theme);
-
-        localStorage.setItem("theme", theme);
-    });
-});
-
-// columns
-$(function () {
-    const saved = JSON.parse(localStorage.getItem("columns"));
-
-    if (saved) {
-        $(".col-toggle").each(function () {
-            const shown = saved.includes(Number($(this).data("col")));
-            $(this).prop("checked", shown);
-        });
-    }
-
-    $(".col-toggle").on("change", function () {
-        const visible = $(".col-toggle:checked")
-            .map(function () {
-                return Number($(this).data("col"));
-            })
-            .get();
-        localStorage.setItem("columns", JSON.stringify(visible));
-    });
-});
-
-$(function () {
-    const toolbar = $("#table-toolbar");
-    const tableView = $("#table-view");
     const incidentForm = $("#incident-form");
+    const incidentModal = new bootstrap.Modal("#incident-modal");
 
     let editingIndex = null;
 
-    const showForm = () => {
-        toolbar.addClass("d-none");
-        tableView.addClass("d-none");
-        incidentForm.removeClass("d-none");
+    const openModal = (mode) => {
+        if (mode === "edit") {
+            $("#incident-modal-title").text("Edit incident");
+            $("#save-incident").text("Save");
+        } else {
+            $("#incident-modal-title").text("Add incident");
+            $("#save-incident").text("Add");
+        }
+        incidentModal.show();
     };
 
-    const showTable = () => {
-        incidentForm.addClass("d-none").removeClass("was-validated");
+    $("#incident-modal").on("hidden.bs.modal", function () {
+        incidentForm.removeClass("was-validated");
         incidentForm[0].reset();
         editingIndex = null;
-        toolbar.removeClass("d-none");
-        tableView.removeClass("d-none");
-    };
+    });
 
     const COLUMNS = [
         { key: "title", label: "Title" },
@@ -111,7 +68,7 @@ $(function () {
         $("#incident-description").val(incident.description);
 
         editingIndex = index;
-        showForm();
+        openModal("edit");
     };
 
     const deleteIncident = (index) => {
@@ -176,9 +133,8 @@ $(function () {
 
     $("#add-incident-btn").on("click", function () {
         editingIndex = null;
-        showForm();
+        openModal("add");
     });
-    $("#cancel-incident").on("click", showTable);
     $(".col-toggle").on("change", renderTable);
 
     $("#preview-data tbody").on("click", ".edit-incident", function () {
@@ -203,7 +159,7 @@ $(function () {
 
     $("#extended-view-btn").on("click", function () {
         $("#dashboard-column").toggleClass("d-none");
-        $("#table-column").toggleClass("col-sm-6 col-xxl-7");
+        $("#table-column").toggleClass("col-lg-6 col-xxl-7");
     });
 
     incidentForm.on("submit", function (event) {
@@ -216,7 +172,7 @@ $(function () {
         }
 
         saveIncident();
-        showTable();
+        incidentModal.hide();
         renderTable();
         renderKpis();
     });
@@ -224,3 +180,62 @@ $(function () {
     renderTable();
     renderKpis();
 });
+
+// pie chart
+$(function () {
+    const canvas = document.getElementById("pie-chart");
+    if (!canvas) return;
+
+    const PALETTE = [
+        "#0d6efd",
+        "#dc3545",
+        "#ffc107",
+        "#198754",
+        "#6f42c1",
+        "#fd7e14",
+        "#20c997",
+        "#6c757d",
+    ];
+
+    const pieChart = new Chart(canvas, {
+        type: "pie",
+        data: { labels: [], datasets: [{ data: [] }] },
+        options: { responsive: true, maintainAspectRatio: false },
+    });
+
+    // { label: count }
+    const updatePieChart = (counts) => {
+        const labels = Object.keys(counts);
+        pieChart.data.labels = labels;
+        pieChart.data.datasets[0].data = Object.values(counts);
+        pieChart.data.datasets[0].backgroundColor = labels.map(
+            (_, i) => PALETTE[i % PALETTE.length],
+        );
+        pieChart.update();
+    };
+
+    // Reusable from anywhere (e.g. the console): updatePieChart({ Open: 3, ... })
+    window.updatePieChart = updatePieChart;
+
+    /*
+        could render:
+        priority
+        status
+        type
+    */
+    const incidents = JSON.parse(localStorage.getItem("incidents")) || [];
+    const byStatus = incidents.reduce((acc, incident) => {
+        acc[incident.status] = (acc[incident.status] || 0) + 1;
+        return acc;
+    }, {});
+    updatePieChart(byStatus);
+});
+
+// draft
+// $(function(){
+//     $('[l-key]').each(function (index, item) {
+//         const key = $(item).attr('l-key');
+//         const lang = resources.find(i=>i.id === key);
+//     });
+//     $(item).text(lang === 'ar' : lang.ar ? lang.en);
+// })

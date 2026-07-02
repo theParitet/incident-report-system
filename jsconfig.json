@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "checkJs": false,
+        "target": "ES2021",
+        "lib": ["ES2021", "DOM", "DOM.Iterable"],
+        "types": ["jquery"]
+    },
+    "include": ["*.js"]
+}

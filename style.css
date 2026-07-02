@@ -1,8 +1,3 @@
-/* for debugging */
-div {
-    /* background-color: #333aaa22; */
-}
-
 body,
 .btn,
 .form-control,
@@ -18,4 +13,17 @@ h6 {
 #preview-data thead th {
     font-family: "Cairo", sans-serif;
     text-transform: uppercase;
+}
+
+body > div {
+    max-width: 2500px;
+}
+
+input[type="number"] {
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* for debbuging */
+* {
+    /* outline: 1px solid #e123483e; */
 }
